@@ -1,0 +1,273 @@
+<%- include('common/header') %>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                <div class="card shadow">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold text-primary">Create Account</h2>
+                            <p class="text-muted">Join TripWheels and start your journey</p>
+                            
+                            <!-- Success/Error Messages -->
+                            <% if (typeof message !== 'undefined') { %>
+                                <div class="alert alert-<%= messageType === 'success' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+                                    <%= message %>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            <% } %>
+                        </div>
+                        
+                        <form method="post" action="/register" id="registerForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <input type="text" name="firstname" class="form-control" id="firstName" placeholder="First name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <input type="text" name="lastname" class="form-control" id="lastName" placeholder="Last name" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input type="email" name="emailaddress" class="form-control" id="email" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-phone"></i>
+                                    </span>
+                                    <input type="tel" name="phonenumber" class="form-control" id="phone" placeholder="Enter your phone number" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                        <input type="password" name="password" class="form-control" id="password" placeholder="Create password" required minlength="8">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        <small>Must be at least 8 characters</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                        <input type="password" name="confirmpassword" class="form-control" id="confirmPassword" placeholder="Confirm password" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="city" class="form-label">Preferred City</label>
+                                <select class="form-select" id="city" name="preferredcity" required>
+                                    <option value="" selected disabled>Select your city</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Bangalore">Bangalore</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Jaipur">Jaipur</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" class="text-decoration-none">Terms & Conditions</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" checked>
+                                <label class="form-check-label" for="newsletter">
+                                    Send me special offers and updates
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                            
+                            <div class="text-center">
+                                <p class="mb-0">Already have an account? 
+                                    <a href="login.ejs" class="text-decoration-none fw-bold">Sign in here</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Benefits Section -->
+                <div class="card mt-4 border-0 bg-light">
+                    <div class="card-body">
+                        <h6 class="text-center mb-3">Benefits of Joining TripWheels</h6>
+                        <div class="row text-center">
+                            <div class="col-4 mb-3">
+                                <i class="fas fa-percentage text-primary fa-2x mb-2"></i>
+                                <h6 class="mb-1">Best Prices</h6>
+                                <small class="text-muted">Exclusive member discounts</small>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <i class="fas fa-bolt text-warning fa-2x mb-2"></i>
+                                <h6 class="mb-1">Quick Booking</h6>
+                                <small class="text-muted">Save your preferences</small>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <i class="fas fa-headset text-info fa-2x mb-2"></i>
+                                <h6 class="mb-1">Priority Support</h6>
+                                <small class="text-muted">24/7 customer care</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Form validation and submission
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+            const phone = document.getElementById('phone').value;
+            
+            // Phone validation
+            if (!/^\d{10}$/.test(phone)) {
+                alert('Please enter a valid 10-digit phone number!');
+                return;
+            }
+            
+            // Password validation
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long!');
+                return;
+            }
+            
+            if (!terms) {
+                alert('Please accept the Terms & Conditions');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
+            submitBtn.disabled = true;
+            
+            // Submit the form after validation
+            this.submit();
+        });
+
+        // Real-time password strength check
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthText = document.createElement('small');
+            strengthText.className = 'form-text';
+            
+            let strength = '';
+            let color = '';
+            
+            if (password.length === 0) {
+                strength = '';
+            } else if (password.length < 4) {
+                strength = 'Weak';
+                color = 'text-danger';
+            } else if (password.length < 8) {
+                strength = 'Medium';
+                color = 'text-warning';
+            } else {
+                strength = 'Strong';
+                color = 'text-success';
+            }
+            
+            // Remove existing strength text
+            const existingText = this.parentNode.nextElementSibling;
+            if (existingText && existingText.classList.contains('form-text')) {
+                existingText.remove();
+            }
+            
+            if (strength) {
+                strengthText.innerHTML = `<span class="${color}">Password strength: ${strength}</span>`;
+                this.parentNode.parentNode.appendChild(strengthText);
+            }
+        });
+
+        // Phone number validation
+        document.getElementById('phone').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+    </script>
+
+    <style>
+        .card {
+            border-radius: 15px;
+            border: none;
+        }
+        .btn {
+            border-radius: 10px;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+        }
+        .input-group-text {
+            border-radius: 10px 0 0 10px;
+        }
+        .alert {
+            border-radius: 10px;
+        }
+    </style>   
+<%- include('common/footer') %>

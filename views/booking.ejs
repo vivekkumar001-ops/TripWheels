@@ -1,0 +1,377 @@
+<%- include('common/header') %>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Book Your Vehicle</h3>
+                        <% if (user) { %>
+                            <small>Booking for: <%= user.name %> (<%= user.email %>)</small>
+                        <% } else { %>
+                            <small>Please <a href="/login" class="text-white fw-bold">login</a> to save booking</small>
+                        <% } %>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <!-- User not logged in warning -->
+                        <% if (!user) { %>
+                            <div class="alert alert-warning">
+                                <h5><i class="fas fa-exclamation-triangle me-2"></i>You are not logged in!</h5>
+                                <p class="mb-0">
+                                    Please <a href="/login" class="alert-link">login</a> or 
+                                    <a href="/register" class="alert-link">register</a> to save your booking details.
+                                    You can still proceed as guest (booking will not be saved).
+                                </p>
+                            </div>
+                        <% } %>
+
+                        <!-- Success/Error Messages -->
+                        <% if (typeof message !== 'undefined') { %>
+                            <div class="alert alert-<%= messageType === 'success' ? 'success' : 'danger' %> alert-dismissible fade show mb-4" role="alert">
+                                <h4 class="alert-heading">
+                                    <%= messageType === 'success' ? '🎉 Booking Successful!' : '❌ Booking Failed' %>
+                                </h4>
+                                <%= message %>
+                                <% if (typeof booking !== 'undefined' && messageType === 'success') { %>
+                                    <hr>
+                                    <h5>Booking Details:</h5>
+                                    <ul class="mb-0">
+                                        <li><strong>Booking ID:</strong> <%= booking._id.toString().slice(-8) %></li>
+                                        <li><strong>Vehicle:</strong> <%= booking.vehicleType %> - <%= booking.vehicleName %></li>
+                                        <li><strong>Total Amount:</strong> ₹<%= booking.totalAmount %></li>
+                                        <li><strong>Status:</strong> <span class="badge bg-warning"><%= booking.status %></span></li>
+                                    </ul>
+                                <% } %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <% } %>
+
+                        <form method="POST" action="/booking" id="bookingForm">
+                            <!-- Pre-fill user data if logged in -->
+                            <% if (user) { %>
+                                <input type="hidden" name="userId" value="<%= user.id %>">
+                            <% } else { %>
+                                <input type="hidden" name="userId" value="guest">
+                            <% } %>
+                            
+                            <!-- Personal Information -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2">
+                                        <i class="fas fa-user me-2"></i>Personal Information
+                                    </h5>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Full Name *</label>
+                                    <input type="text" name="fullname" class="form-control" 
+                                           placeholder="Enter your full name" 
+                                           value="<%= user ? user.name : '' %>" 
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email Address *</label>
+                                    <input type="email" name="email" class="form-control" 
+                                           placeholder="Enter your email" 
+                                           value="<%= user ? user.email : '' %>" 
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="tel" name="phone" class="form-control" 
+                                           placeholder="Enter your phone number" 
+                                           value="<%= user ? user.phone : '' %>" 
+                                           required pattern="[0-9]{10}">
+                                    <div class="form-text">10-digit mobile number</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">User ID (if registered)</label>
+                                    <input type="text" name="userId" class="form-control" 
+                                           placeholder="Enter your user ID (optional)"
+                                           value="<%= user ? user.id : '' %>" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Trip Information -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2">
+                                        <i class="fas fa-route me-2"></i>Trip Information
+                                    </h5>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Pickup City *</label>
+                                    <select class="form-select" name="pickupCity" required>
+                                        <option value="" selected disabled>Select City</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Jaipur">Jaipur</option>
+                                        <option value="Kerala">Kerala</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Drop City *</label>
+                                    <select class="form-select" name="dropCity" required>
+                                        <option value="" selected disabled>Select City</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Jaipur">Jaipur</option>
+                                        <option value="Kerala">Kerala</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Pickup Date *</label>
+                                    <input type="date" name="pickupDate" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Drop Date *</label>
+                                    <input type="date" name="dropDate" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Pickup Time *</label>
+                                    <input type="time" name="pickupTime" class="form-control" value="09:00" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Total Days</label>
+                                    <input type="number" name="totalDays" class="form-control" value="1" min="1" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Distance (km)</label>
+                                    <input type="number" name="distance" class="form-control" value="100" min="10" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Passengers</label>
+                                    <input type="number" name="passengers" class="form-control" value="1" min="1" required>
+                                </div>
+                            </div>
+
+                            <!-- Vehicle Selection -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2">
+                                        <i class="fas fa-car me-2"></i>Vehicle Selection
+                                    </h5>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Type *</label>
+                                    <select class="form-select" name="vehicleType" id="vehicleType" required>
+                                        <option value="" selected disabled>Select Vehicle Type</option>
+                                        <option value="Hatchback" data-price="12">Hatchback (₹12/km)</option>
+                                        <option value="Sedan" data-price="15">Sedan (₹15/km)</option>
+                                        <option value="SUV" data-price="18">SUV (₹18/km)</option>
+                                        <option value="Innova" data-price="20">Innova (₹20/km)</option>
+                                        <option value="Tempo Traveller" data-price="25">Tempo Traveller (₹25/km)</option>
+                                        <option value="Bus" data-price="30">Bus (₹30/km)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Name *</label>
+                                    <input type="text" name="vehicleName" class="form-control" 
+                                           placeholder="e.g., Toyota Innova Crysta" 
+                                           value="Toyota Innova" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Price per km (₹)</label>
+                                    <input type="number" name="pricePerKm" id="pricePerKm" class="form-control" 
+                                           value="15" min="10" step="0.5" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle ID</label>
+                                    <input type="text" name="vehicleId" class="form-control" 
+                                           placeholder="V001" value="V001">
+                                </div>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2">
+                                        <i class="fas fa-info-circle me-2"></i>Additional Information
+                                    </h5>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="driverRequired" id="driverRequired" checked>
+                                        <label class="form-check-label" for="driverRequired">
+                                            Driver Required
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Special Requirements</label>
+                                    <textarea class="form-control" name="requirements" rows="3" placeholder="Any special requirements..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Payment Information -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2">
+                                        <i class="fas fa-rupee-sign me-2"></i>Payment Information
+                                    </h5>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Total Amount (₹)</label>
+                                    <input type="number" id="totalAmount" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Advance Paid (₹)</label>
+                                    <input type="number" name="advancePaid" id="advancePaid" class="form-control" value="0" min="0">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Balance Amount (₹)</label>
+                                    <input type="number" id="balanceAmount" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="fas fa-check-circle me-2"></i>Confirm Booking
+                                </button>
+                                <a href="/vehicles" class="btn btn-outline-secondary btn-lg px-5 ms-2">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Booking Summary Card -->
+                <div class="card shadow mt-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>Booking Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="display-6 text-primary">₹<span id="summaryPrice">15</span>/km</div>
+                                <small class="text-muted">Price per km</small>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="display-6 text-success" id="summaryDistance">100 km</div>
+                                <small class="text-muted">Total Distance</small>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="display-6 text-warning" id="summaryDays">1 Day</div>
+                                <small class="text-muted">Trip Duration</small>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <h6 class="alert-heading">Estimated Total: ₹<span id="estimatedTotal">1500</span></h6>
+                            <small class="mb-0">This is an estimated amount. Final amount may vary based on actual distance.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate total amount
+        function calculateTotal() {
+            const pricePerKm = parseFloat(document.getElementById('pricePerKm').value) || 15;
+            const distance = parseFloat(document.querySelector('input[name="distance"]').value) || 100;
+            const days = parseFloat(document.querySelector('input[name="totalDays"]').value) || 1;
+            const advancePaid = parseFloat(document.getElementById('advancePaid').value) || 0;
+            
+            const totalAmount = pricePerKm * distance * days;
+            const balanceAmount = totalAmount - advancePaid;
+            
+            // Update display
+            document.getElementById('totalAmount').value = totalAmount.toFixed(2);
+            document.getElementById('balanceAmount').value = balanceAmount.toFixed(2);
+            
+            // Update summary
+            document.getElementById('summaryPrice').textContent = pricePerKm;
+            document.getElementById('summaryDistance').textContent = distance + ' km';
+            document.getElementById('summaryDays').textContent = days + (days > 1 ? ' Days' : ' Day');
+            document.getElementById('estimatedTotal').textContent = totalAmount.toFixed(2);
+        }
+        
+        // Update price when vehicle type changes
+        document.getElementById('vehicleType').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            if (price) {
+                document.getElementById('pricePerKm').value = price;
+                calculateTotal();
+            }
+        });
+        
+        // Recalculate when inputs change
+        document.querySelectorAll('#pricePerKm, input[name="distance"], input[name="totalDays"], #advancePaid').forEach(input => {
+            input.addEventListener('input', calculateTotal);
+        });
+        
+        // Initialize calculation
+        calculateTotal();
+        
+        // Form validation
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            const pickupDate = new Date(document.querySelector('input[name="pickupDate"]').value);
+            const dropDate = new Date(document.querySelector('input[name="dropDate"]').value);
+            const today = new Date();
+            
+            // Set time to midnight for comparison
+            today.setHours(0, 0, 0, 0);
+            pickupDate.setHours(0, 0, 0, 0);
+            dropDate.setHours(0, 0, 0, 0);
+            
+            // Validate dates
+            if (pickupDate < today) {
+                e.preventDefault();
+                alert('Pickup date cannot be in the past!');
+                return;
+            }
+            
+            if (dropDate < pickupDate) {
+                e.preventDefault();
+                alert('Drop date cannot be before pickup date!');
+                return;
+            }
+            
+            // Validate phone
+            const phone = document.querySelector('input[name="phone"]').value;
+            if (!/^\d{10}$/.test(phone)) {
+                e.preventDefault();
+                alert('Please enter valid 10-digit phone number!');
+                return;
+            }
+            
+            // Show loading
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+            submitBtn.disabled = true;
+        });
+        
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('input[name="pickupDate"]').min = today;
+        document.querySelector('input[name="dropDate"]').min = today;
+        
+        // Set default dates
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dayAfterTomorrow = new Date();
+        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+        
+        document.querySelector('input[name="pickupDate"]').value = tomorrow.toISOString().split('T')[0];
+        document.querySelector('input[name="dropDate"]').value = dayAfterTomorrow.toISOString().split('T')[0];
+        
+        // Debug function
+        function logFormData() {
+            const formData = new FormData(document.getElementById('bookingForm'));
+            console.log('Current Form Data:');
+            for (let [key, value] of formData.entries()) {
+                console.log(key + ': ' + value);
+            }
+        }
+        
+        // Log form data on change
+        document.getElementById('bookingForm').addEventListener('change', logFormData);
+    </script>
+<%- include('common/footer') %>

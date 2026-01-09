@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Registration - TripWheels Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .navbar-custom {
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+        }
+        .sidebar-header {
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+        }
+        .edit-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            margin: 0 auto 20px;
+        }
+        .info-card {
+            border-left: 4px solid #4361ee;
+        }
+        .form-section {
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .last-section {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Include Dashboard Header -->
+    <%- include('header'); %>
+
+    <!-- Dashboard Content -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Include Dashboard Sidebar -->
+            <%- include('sidebar'); %>
+
+            <!-- Main Content Area -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Page Header -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="card-title mb-0 text-primary">
+                                <i class="fas fa-user-edit me-2"></i>Edit Registration
+                            </h3>
+                            <div>
+                                <a href="/view-registration" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i>Back to Registrations
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success/Error Messages -->
+                <% if (typeof message !== 'undefined') { %>
+                    <div class="alert alert-<%= messageType === 'success' ? 'success' : 'danger' %> alert-dismissible fade show mb-4" role="alert">
+                        <%= message %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <% } %>
+
+                <!-- User Info Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h4>Edit Registration Details</h4>
+                            <p class="text-muted">
+                                <i class="fas fa-id-card me-1"></i> User ID: <%= user._id %>
+                            </p>
+                            <small class="text-muted">
+                                Registered on: <%= new Date(user.createdAt).toLocaleDateString('en-IN') %>
+                            </small>
+                        </div>
+
+                        <!-- Current Info Summary -->
+                        <div class="card info-card mb-4">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="fas fa-info-circle me-2"></i>Current Information
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Name:</strong> <%= user.firstname %> <%= user.lastname %></p>
+                                        <p class="mb-1"><strong>Email:</strong> <%= user.emailaddress %></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Phone:</strong> <%= user.phonenumber %></p>
+                                        <p class="mb-1"><strong>City:</strong> <%= user.preferredcity %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Edit Form -->
+                        <form method="POST" action="/update-registration/<%= user._id %>" id="editForm">
+                            
+                            <!-- Personal Information Section -->
+                            <div class="form-section">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fas fa-user me-2"></i>Personal Information
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">First Name *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                            <input type="text" name="firstname" class="form-control" 
+                                                   value="<%= user.firstname %>" required
+                                                   placeholder="Enter first name">
+                                        </div>
+                                        <div class="form-text">User's first name</div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Last Name *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                            <input type="text" name="lastname" class="form-control" 
+                                                   value="<%= user.lastname %>" required
+                                                   placeholder="Enter last name">
+                                        </div>
+                                        <div class="form-text">User's last name</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information Section -->
+                            <div class="form-section">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fas fa-address-book me-2"></i>Contact Information
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email Address *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-envelope"></i>
+                                            </span>
+                                            <input type="email" name="emailaddress" class="form-control" 
+                                                   value="<%= user.emailaddress %>" required
+                                                   placeholder="Enter email address">
+                                        </div>
+                                        <div class="form-text">Primary contact email</div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Phone Number *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-phone"></i>
+                                            </span>
+                                            <input type="tel" name="phonenumber" class="form-control" 
+                                                   value="<%= user.phonenumber %>" required
+                                                   placeholder="Enter phone number"
+                                                   pattern="[0-9]{10}" 
+                                                   title="Please enter a valid 10-digit phone number">
+                                        </div>
+                                        <div class="form-text">10-digit mobile number</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Location & Preferences Section -->
+                            <div class="form-section last-section">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Location & Preferences
+                                </h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Preferred City *</label>
+                                    <select class="form-select" name="preferredcity" required>
+                                        <option value="" disabled>Select your city</option>
+                                        <option value="Delhi" <%= user.preferredcity === 'Delhi' ? 'selected' : '' %>>Delhi</option>
+                                        <option value="Mumbai" <%= user.preferredcity === 'Mumbai' ? 'selected' : '' %>>Mumbai</option>
+                                        <option value="Bangalore" <%= user.preferredcity === 'Bangalore' ? 'selected' : '' %>>Bangalore</option>
+                                        <option value="Goa" <%= user.preferredcity === 'Goa' ? 'selected' : '' %>>Goa</option>
+                                        <option value="Jaipur" <%= user.preferredcity === 'Jaipur' ? 'selected' : '' %>>Jaipur</option>
+                                        <option value="Kerala" <%= user.preferredcity === 'Kerala' ? 'selected' : '' %>>Kerala</option>
+                                        <option value="Other" <%= user.preferredcity === 'Other' ? 'selected' : '' %>>Other</option>
+                                    </select>
+                                    <div class="form-text">User's preferred city for vehicle bookings</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Account Status</label>
+                                    <select class="form-select" name="status">
+                                        <option value="active" <%= user.status === 'active' ? 'selected' : '' %>>Active</option>
+                                        <option value="inactive" <%= user.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                                        <option value="pending" <%= user.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                                        <option value="suspended" <%= user.status === 'suspended' ? 'selected' : '' %>>Suspended</option>
+                                    </select>
+                                    <div class="form-text">Current account status</div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Notes -->
+                            <div class="mb-4">
+                                <label class="form-label">Admin Notes</label>
+                                <textarea class="form-control" name="admin_notes" rows="3" 
+                                          placeholder="Add any notes about this user..."><%= user.admin_notes || '' %></textarea>
+                                <div class="form-text">Internal notes for admin reference</div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <div>
+                                    <a href="/view-registration" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times me-1"></i>Cancel
+                                    </a>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-danger me-2" 
+                                            onclick="confirmDelete('<%= user._id %>')">
+                                        <i class="fas fa-trash me-1"></i>Delete User
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i>Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- User Activity Log -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-history me-2"></i>User Activity
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <i class="fas fa-calendar-plus text-success me-2"></i>
+                                Registered on: <strong><%= new Date(user.createdAt).toLocaleString('en-IN') %></strong>
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-sync-alt text-info me-2"></i>
+                                Last updated: <strong><%= new Date(user.updatedAt || user.createdAt).toLocaleString('en-IN') %></strong>
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-user-check text-primary me-2"></i>
+                                Account Status: 
+                                <span class="badge bg-<%= 
+                                    user.status === 'active' ? 'success' : 
+                                    user.status === 'inactive' ? 'secondary' : 
+                                    user.status === 'pending' ? 'warning' : 'danger'
+                                %>">
+                                    <%= user.status || 'active' %>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-trash fa-3x text-danger mb-3"></i>
+                        <h5>Are you sure you want to delete this user?</h5>
+                        <p class="text-muted">
+                            This action cannot be undone. All user data will be permanently deleted.
+                        </p>
+                        <div class="alert alert-warning">
+                            <strong>User: </strong> <%= user.firstname %> <%= user.lastname %><br>
+                            <strong>Email: </strong> <%= user.emailaddress %>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <a href="/delete-vehicle/<%= user._id %>" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i>Delete Permanently
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Phone number validation
+        document.querySelector('input[name="phonenumber"]').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+
+        // Form validation
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            const phone = document.querySelector('input[name="phonenumber"]').value;
+            const email = document.querySelector('input[name="emailaddress"]').value;
+            
+            // Phone validation
+            if (!/^\d{10}$/.test(phone)) {
+                e.preventDefault();
+                alert('Please enter a valid 10-digit phone number!');
+                return;
+            }
+            
+            // Email validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                e.preventDefault();
+                alert('Please enter a valid email address!');
+                return;
+            }
+            
+            // Show loading
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+            submitBtn.disabled = true;
+            
+            // Form will submit automatically
+        });
+
+        // Delete confirmation
+        function confirmDelete(userId) {
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+
+        // Real-time form validation
+        document.querySelectorAll('input[required], select[required]').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (!this.value.trim()) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+
+        // Character counter for notes
+        const notesTextarea = document.querySelector('textarea[name="admin_notes"]');
+        const charCounter = document.createElement('small');
+        charCounter.className = 'form-text text-end d-block';
+        notesTextarea.parentNode.appendChild(charCounter);
+        
+        notesTextarea.addEventListener('input', function() {
+            const count = this.value.length;
+            charCounter.textContent = `${count}/500 characters`;
+            
+            if (count > 500) {
+                charCounter.classList.add('text-danger');
+                this.classList.add('is-invalid');
+            } else {
+                charCounter.classList.remove('text-danger');
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        // Trigger initial count
+        notesTextarea.dispatchEvent(new Event('input'));
+    </script>
+</body>
+</html>

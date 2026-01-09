@@ -1,0 +1,75 @@
+<%- include('common/header') %>
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Explore Cities</h1>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="city-card">
+                    <img src="img/Delhi.webp" alt="Delhi" onerror="this.src='https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    <div class="city-overlay">
+                        <h5>Delhi</h5>
+                        <p>Capital City • Historical Sites</p>
+                        <a href="/vehicles?city=delhi" class="btn btn-sm btn-warning">View Vehicles</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="city-card">
+                    <img src="img/Goa.webp" alt="Goa" onerror="this.src='https://images.unsplash.com/photo-1529254479751-fbacb4c3b7c8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    <div class="city-overlay">
+                        <h5>Goa</h5>
+                        <p>Beaches • Nightlife</p>
+                        <a href="/vehicles?city=goa" class="btn btn-sm btn-warning">View Vehicles</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="city-card">
+                    <img src="img/Jaipur.webp" alt="Jaipur" onerror="this.src='https://images.unsplash.com/photo-1596176530529-78163a4f7af2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    <div class="city-overlay">
+                        <h5>Jaipur</h5>
+                        <p>Pink City • Forts</p>
+                        <a href="/vehicles?city=jaipur" class="btn btn-sm btn-warning">View Vehicles</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="city-card">
+                    <img src="img/Mumbai.webp" alt="Mumbai" onerror="this.src='https://images.unsplash.com/photo-1587474260584-136574528ed5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                    <div class="city-overlay">
+                        <h5>Mumbai</h5>
+                        <p>City of Dreams • Gateway of India</p>
+                        <a href="/vehicles?city=mumbai" class="btn btn-sm btn-warning">View Vehicles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .city-card {
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        height: 250px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .city-card img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .city-card:hover img {
+        transform: scale(1.1);
+    }
+    .city-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        color: white;
+        padding: 20px;
+    }
+    </style>
+<%- include('common/footer') %>

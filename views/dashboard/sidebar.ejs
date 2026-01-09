@@ -1,0 +1,93 @@
+<!-- Sidebar -->
+<div class="col-lg-3 col-md-4 mb-4">
+    <div class="card shadow-sm h-100 border-0">
+        <div class="card-header sidebar-header text-white border-0 py-3">
+            <h5 class="card-title mb-0 text-center fw-semibold">
+                <i class="fas fa-bars me-2"></i>Dashboard Menu
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+                <!-- Dashboard -->
+                <a href="/dashboard"
+                    class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'dashboard' ? 'active bg-primary text-white' : '' %>">
+                    <i class="fas fa-tachometer-alt me-3"></i>Dashboard
+                </a>
+
+                <!-- My Bookings -->
+                <a href="/my-bookings"
+                    class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'my-bookings' ? 'active bg-primary text-white' : '' %>">
+                    <i class="fas fa-calendar-check me-3"></i>My Bookings
+                </a>
+
+                <!-- Admin Only Sections -->
+                <% if (user && user.isAdmin) { %>
+                    <!-- Users & Registration -->
+                    <a href="/view-registration"
+                        class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'view-registration' ? 'active bg-primary text-white' : '' %>">
+                        <i class="fas fa-users me-3"></i>View Registration
+                    </a>
+
+                    <!-- Contact Messages -->
+                    <a href="/view-contact"
+                        class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'view-contact' ? 'active bg-primary text-white' : '' %>">
+                        <i class="fas fa-address-book me-3"></i>View Contact
+                    </a>
+
+                    <!-- Add Vehicle -->
+                    <a href="/add-vehicle"
+                        class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'add-vehicle' ? 'active bg-primary text-white' : '' %>">
+                        <i class="fas fa-car me-3"></i>Add Vehicle
+                    </a>
+                <% } %>
+
+                <!-- Payments -->
+                <a href="/payments"
+                    class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'payments' ? 'active bg-primary text-white' : '' %>">
+                    <i class="fas fa-credit-card me-3"></i>Payments
+                </a>
+
+                <!-- Offers -->
+                <a href="/offers"
+                    class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'offers' ? 'active bg-primary text-white' : '' %>">
+                    <i class="fas fa-tag me-3"></i>Offers
+                </a>
+
+                <!-- Support -->
+                <a href="/support"
+                    class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'support' ? 'active bg-primary text-white' : '' %>">
+                    <i class="fas fa-headset me-3"></i>Support
+                </a>
+
+                <!-- Settings -->
+                <a href="/settings"
+                    class="list-group-item list-group-item-action border-0 py-3 <%= activePage === 'settings' ? 'active bg-primary text-white' : '' %>">
+                    <i class="fas fa-cog me-3"></i>Settings
+                </a>
+
+                <!-- Divider -->
+                <div class="list-group-item border-0 py-2">
+                    <hr class="my-1">
+                </div>
+
+                <!-- Main Website & Logout -->
+                <a href="/" class="list-group-item list-group-item-action border-0 py-3">
+                    <i class="fas fa-globe me-3 text-primary"></i>Main Website
+                </a>
+
+                <a href="/logout" class="list-group-item list-group-item-action border-0 py-3 text-danger">
+                    <i class="fas fa-sign-out-alt me-3"></i>Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="card-footer bg-light border-0 py-3 text-center">
+            <small class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                TripWheels v1.0<br>
+                User: <%= user ? user.name : 'Guest' %>
+            </small>
+        </div>
+    </div>
+</div>
