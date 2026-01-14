@@ -1,102 +1,87 @@
-
-// LOAD ENV VARIABLES (VERY FIRST LINE)
-require("dotenv").config();
-
-// DEBUG (remove later if you want)
-console.log("ENV CHECK =>", process.env.MONGO_URI);
-
-// IMPORTS
-const express = require("express");
-const path = require("path");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const session = require("express-session");
-const router = require("./controller/router");
-
-// APP INIT
+const express = require('express');
+const path = require('path');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const router = require('./controller/router');
 const app = express();
-const PORT = process.env.PORT || 7000;
+const PORT = 7000;
 
-// MONGOOSE CONFIG
-mongoose.set("strictQuery", false);
-
+// MongoDB Connection
 console.log("🔄 Connecting to MongoDB...");
 
-mongoose
-  .connect(process.env.MONGO_URI, {
+mongoose.connect("mongodb+srv://admin:admin@cluster0.pm6vus3.mongodb.net/demo?retryWrites=true&w=majority", {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
+    useUnifiedTopology: true
+})
+.then(() => {
     console.log("✅ MongoDB connection successful!");
-  })
-  .catch((err) => {
+})
+.catch((err) => {
     console.log("❌ MongoDB connection failed:", err.message);
-  });
+});
 
-// IMAGE STATIC FILES
-  app.use("/img", express.static(path.join(__dirname, "img")));
-app.use("/img", express.static(path.join(__dirname, "views/img")));
-
-// SESSION MIDDLEWARE
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "tripwheels_secret",
+// Session Middleware
+app.use(session({
+    secret: 'tripwheels_secret_key_2024_very_secure',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
-      httpOnly: true,
-      secure: false, // Render free / local
-    },
-  })
-);
+        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        httpOnly: true,
+        secure: false
+    }
+}));
 
-// GLOBAL USER FOR EJS
+// Make user available in all views
 app.use((req, res, next) => {
-  res.locals.user = req.session.user || null;
-  next();
+    res.locals.user = req.session.user || null;
+    next();
 });
 
-// VIEW ENGINE
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+// Express Configuration
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// STATIC FILES
-app.use("/img", express.static(path.join(__dirname, "img")));
-app.use("/css", express.static(path.join(__dirname, "css")));
-app.use("/js", express.static(path.join(__dirname, "js")));
+// Static Files Middleware
+app.use(express.static(path.join(__dirname, 'views')));
+app.use('/img', express.static(path.join(__dirname, 'views/img')));
+app.use('/css', express.static(path.join(__dirname, 'views/css')));
+app.use('/js', express.static(path.join(__dirname, 'views/js')));
 
-// BODY PARSER
+// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// DEBUG ROUTE LOG
+// Debug middleware
 app.use((req, res, next) => {
-  console.log(
-    `${req.method} ${req.url} - ${
-      req.session.user ? req.session.user.email : "Guest"
-    }`
-  );
-  next();
+    console.log(`${req.method} ${req.url} - ${req.session.user ? 'User: ' + req.session.user.email : 'Guest'}`);
+    next();
 });
 
-// ROUTES
-app.use("/", router);
+// Use Router
+app.use('/', router);
 
-// ERROR HANDLING
+// Error handling middleware
 app.use((err, req, res, next) => {
-  console.error("❌ Server Error:", err);
-  res.status(500).render("404");
+    console.error('❌ Server Error:', err);
+    res.status(500).render('404');
 });
 
-// 404 PAGE
+// 404 Page
 app.use((req, res) => {
-  res.status(404).render("404");
+    res.status(404).render('404');
 });
 
-// START SERVER
+// Start Server
 app.listen(PORT, () => {
-  console.log("🚗 TripWheels Server Started Successfully!");
-  console.log(`🌐 Running on port ${PORT}`);
+    console.log(`\n🚗 TripWheels Server Started Successfully!`);
+    console.log(`🌐 URL: http://localhost:${PORT}`);
+    console.log(`🔐 Login: http://localhost:${PORT}/login`);
+    console.log(`📝 Register: http://localhost:${PORT}/register`);
+    console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
+    console.log(`\n📝 TEST CREDENTIALS:`);
+    console.log(`👑 Admin: admin@tripwheels.com / admin123`);
+    console.log(`👤 User: Register (auto login)`);
+    console.log(`\n⚡ Server running on port ${PORT}`);
 });
