@@ -82,6 +82,6 @@ app.listen(PORT, () => {
     console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
     console.log(`\n📝 TEST CREDENTIALS:`);
     console.log(`👑 Admin: admin@tripwheels.com / admin123`);
-    console.log(`👤 User: Register करें (auto login)`);
+    console.log(`👤 User: Register (auto login)`);
     console.log(`\n⚡ Server running on port ${PORT}`);
 });
